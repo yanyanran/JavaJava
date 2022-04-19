@@ -6,7 +6,7 @@ public class PalindromeIgnore {
         System.out.println("Enter a string : ");
         String s = input.nextLine();
 
-        System.out.println("忽略非字母或数字字符 \n " + s + "是回文吗?: " + isPalindrome(s));
+        System.out.println("忽略非字母或数字字符 \n " + s + " 是回文吗?: " + isPalindrome(s));
     }
 
     public static boolean isPalindrome(String s){
@@ -20,7 +20,9 @@ public class PalindromeIgnore {
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0;i < s.length();i++)
         {
-            stringBuilder.append(s.charAt(i));
+            if(Character.isLetterOrDigit(s.charAt(i))){
+                stringBuilder.append(s.charAt(i));
+            }
         }
         return stringBuilder.toString();
     }
