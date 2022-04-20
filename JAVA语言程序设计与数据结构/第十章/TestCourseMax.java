@@ -35,7 +35,7 @@ class NewCourse{
             }
             students[numberOfStudent] = student;
             numberOfStudent++;
-            this.students = students;
+            this.students = students;  // 覆盖
         }
     }
 
