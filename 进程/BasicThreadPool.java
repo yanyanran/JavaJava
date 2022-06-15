@@ -18,7 +18,7 @@ interface ThreadPool {
     // 获取线程池中活跃线程的数量
     int getActiveCount();
 }
-@FunctionalInterface
+
 interface ThreadFactory {
     Thread createThread(Runnable runnable);
 }
@@ -30,9 +30,7 @@ interface RunnableQueue {
 }
 
 interface DenyPolicy {
-
     void reject(Runnable runnable, ThreadPool threadPool);
-
     // 该拒绝策略会直接将任务丢弃
     class DiscardDenyPolicy implements DenyPolicy {
         @Override
@@ -40,32 +38,6 @@ interface DenyPolicy {
             System.out.println(runnable + " 任务已被丢弃。");
         }
     }
-
-    // 该拒绝策略会向任务提交者抛出异常
-    class AbortDenyPolicy implements DenyPolicy {
-        @Override
-        public void reject(Runnable runnable, ThreadPool threadPool) {
-            throw new RunnableDenyException("任务 " + runnable + " 将被终止。");
-        }
-    }
-
-    // 该拒绝策略会使任务在提交者所在的线程中执行任务
-    class RunnerDenyPolicy implements DenyPolicy {
-        @Override
-        public void reject(Runnable runnable, ThreadPool threadPool) {
-            if (!threadPool.isShutDown())
-                runnable.run();
-        }
-    }
-
-}
-
-class RunnableDenyException extends RuntimeException{
-
-    public RunnableDenyException(String message) {
-        super(message);
-    }
-
 }
 
 class LinkedRunnableQueue implements RunnableQueue {
@@ -76,6 +48,7 @@ class LinkedRunnableQueue implements RunnableQueue {
     //存放任务的容器
     private final LinkedList<Runnable> linkedList=new LinkedList<>();
     private final ThreadPool threadPool;
+
     public LinkedRunnableQueue(int limit,DenyPolicy denyPolicy,ThreadPool threadPool) {
         this.limit=limit;
         this.denyPolicy=denyPolicy;
@@ -94,7 +67,6 @@ class LinkedRunnableQueue implements RunnableQueue {
                 linkedList.notifyAll();
             }
         }
-
     }
 
     @Override
@@ -104,13 +76,11 @@ class LinkedRunnableQueue implements RunnableQueue {
                 try {
                     linkedList.wait();
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
             return linkedList.remove();
         }
-
     }
 
     @Override
@@ -118,7 +88,6 @@ class LinkedRunnableQueue implements RunnableQueue {
         synchronized(linkedList){
             return linkedList.size();
         }
-
     }
 }
 
@@ -332,12 +301,11 @@ public class BasicThreadPool extends Thread implements ThreadPool{
             throw new IllegalStateException("线程池已销毁。");
         return this.activeCount;
     }
-
 }
 
 class ThreadPoolTest {
     public static void main(String[] args) throws InterruptedException {
-        // 定义线程池，初始化线程数为 2，最大线程数为 6，核心线程数为 4，任务队列最多允许 1000 个任务
+        // 定义线程池，初始化线程数为2，最大线程数为6，核心线程数为4，任务队列最多允许1000个任务
         final ThreadPool threadPool = new BasicThreadPool(2, 6, 4, 1000);
         // 定义 20 个任务并且提交给线程池
         for (int i = 0; i < 20; i++) {
@@ -353,12 +321,12 @@ class ThreadPoolTest {
 
         // 不断输出线程池的信息
         while (true) {
-            System.out.println("threadPool.getActiveCount() = " + threadPool.getActiveCount());
-            System.out.println("threadPool.getQueueSize() = " + threadPool.getQueueSize());
-            System.out.println("threadPool.getCoreSize() = " + threadPool.getCoreSize());
-            System.out.println("threadPool.getMaxSize() = " + threadPool.getMaxSize());
-            System.out.println("-----------------------------------------------------------");
-            TimeUnit.SECONDS.sleep(5);
+            System.out.println("threadPool.getActiveCount() = " + threadPool.getActiveCount()); // 线程池中活跃线程的数量:2
+            System.out.println("threadPool.getQueueSize() = " + threadPool.getQueueSize()); // 线程池用于缓存任务队列的大小:18
+            System.out.println("threadPool.getCoreSize() = " + threadPool.getCoreSize()); // 线程池的核心线程数量:4
+            System.out.println("threadPool.getMaxSize() = " + threadPool.getMaxSize()); // 线程池最大的线程数:6
+            System.out.println("------------------------------");
+            TimeUnit.SECONDS.sleep(1);
             threadPool.shutDown();
         }
     }
