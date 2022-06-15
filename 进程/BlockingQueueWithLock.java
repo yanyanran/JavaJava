@@ -1,8 +1,10 @@
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class BlockingQueueWithLock<E> implements Queue<E> {
+public abstract class BlockingQueueWithLock<E> extends ArrayBlockingQueue<E> implements Queue<E>{
 
     private E[] array;
     private int head;
@@ -10,12 +12,14 @@ public abstract class BlockingQueueWithLock<E> implements Queue<E> {
 
     private volatile int size;
 
-    private ReentrantLock  lock     = new ReentrantLock();
+    private ReentrantLock lock = new ReentrantLock();
     //使用了Condition类
     private Condition notFull  = lock.newCondition();
     private Condition notEmpty = lock.newCondition();
 
+
     public BlockingQueueWithLock(int capacity) {
+        super(capacity);
         array = (E[]) new Object[capacity];
     }
 
