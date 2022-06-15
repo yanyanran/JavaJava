@@ -112,7 +112,6 @@ class InternalTask implements Runnable {
     public void stop(){
         this.isStop=true;
     }
-
 }
 
 public class BasicThreadPool extends Thread implements ThreadPool{

@@ -1,6 +1,7 @@
 public class MyThreadPool {
     private static BlockingQueueWithLock<Runnable> queue = null;
     private volatile int coreSize;
+    private volatile int poolSize;  //当前线程数
     private volatile int maxSize;
     private volatile int timeOut;
 
