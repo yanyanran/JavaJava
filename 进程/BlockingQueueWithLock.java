@@ -11,6 +11,7 @@ public abstract class BlockingQueueWithLock<E> implements Queue<E> {
     private volatile int size;
 
     private ReentrantLock  lock     = new ReentrantLock();
+    //使用了Condition类
     private Condition notFull  = lock.newCondition();
     private Condition notEmpty = lock.newCondition();
 
@@ -35,7 +36,7 @@ public abstract class BlockingQueueWithLock<E> implements Queue<E> {
             lock.unlock();
         }
     }
-    
+
     public E take() throws InterruptedException {
         lock.lockInterruptibly();
         try {

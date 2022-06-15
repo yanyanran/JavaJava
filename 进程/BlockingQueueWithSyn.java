@@ -1,5 +1,6 @@
 import java.util.Queue;
 
+//synchronized
 public abstract class BlockingQueueWithSyn<E> implements Queue<E> {
 
     private E[] array;
