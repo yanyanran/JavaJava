@@ -24,8 +24,8 @@ public class TestExecuteAndSubmit {
             @Override
             public Integer call() throws Exception {
                 int sum = 0;
-                for (int i = start; i <=end; i++) {
-                    sum+=i;
+                for (int i = start; i <= end; i++) {
+                    sum += i;
                 }
                 return sum;
             }
@@ -39,6 +39,11 @@ public class TestExecuteAndSubmit {
                 20,
                 TimeUnit.SECONDS,
                 new ArrayBlockingQueue<Runnable>(10), new ThreadFactory() {
+            @Override
+            public Thread createThread(Runnable runnable) {
+                return null;
+            }
+
             @Override
             public Thread newThread(Runnable r) {
                 //1、设置线程的名字
@@ -67,6 +72,5 @@ public class TestExecuteAndSubmit {
         Future submit3 = executor.submit(new Home(21,30));
         ((Integer)submit1.get()).intValue();
         System.out.println((((Integer)submit1.get()).intValue()+((Integer)submit2.get()).intValue()+((Integer)submit3.get()).intValue()));
-
     }
 }
