@@ -19,20 +19,17 @@ public class MyThreadPool {
     private volatile boolean SHUTDOWN = false;// 是否停止工作
 
     // MyThreadPool(int corePoolSize, int maxPoolSize, int timeout)
-    public MyThreadPool(int corePoolSize, int maxPoolSize) throws IllegalArgumentException{
+    public MyThreadPool(int corePoolSize, int maxPoolSize) {
         ExecutorService ex = Executors.newFixedThreadPool(10);
         int num = ((ThreadPoolExecutor)ex).getActiveCount();  // 获取当前运行线程数
 
         this.coreSize = corePoolSize;
         this.maxSize = maxPoolSize;
         //this.timeOut = timeout;
-        this.poolSize = num;
+        this.poolSize = 1;  // null error
 
-        try {
-            queue = new ArrayBlockingQueue<Runnable>(poolSize);  // ？
-        }catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+        queue = new ArrayBlockingQueue<Runnable>(poolSize);
+
     }
 
     //class Running
@@ -47,9 +44,8 @@ public class MyThreadPool {
                 if (SHUTDOWN) {
                     Thread.interrupted();
                 }
-                Runnable task = null;
                 try {
-                    task = queue.take();
+                     Runnable task = queue.take();
                     task.run();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -102,10 +98,10 @@ public class MyThreadPool {
 
     // Main Test
     public static void main(String[] args) throws IllegalArgumentException {
-        MyThreadPool ex = new MyThreadPool(2, 5);  // ？
+        MyThreadPool ex = new MyThreadPool(2, 5);
         for (int i = 2; i < 5; i++) {
             ex.execute(() ->
-                    System.out.println("Thread" + Thread.currentThread().getName() + "still working!\n"));
+                    System.out.println("Thread " + Thread.currentThread().getName() + " still working!\n"));
         }
         ex.shutdown();
     }
@@ -113,9 +109,28 @@ public class MyThreadPool {
 
 /**
  * IllegalArgumentException 方法收到非法参数
- * Exception in thread "main" java.lang.IllegalArgumentException
- * 	at java.base/java.util.concurrent.ArrayBlockingQueue.<init>(ArrayBlockingQueue.java:272)
- * 	at java.base/java.util.concurrent.ArrayBlockingQueue.<init>(ArrayBlockingQueue.java:257)
- * 	at MyThreadPool.<init>(MyThreadPool.java:55)
- * 	at MyThreadPool.main(MyThreadPool.java:105)
  * */
+
+/*
+Thread-0 interrupt！
+
+Thread-1 interrupt！
+
+Thread-2 interrupt！
+
+Thread-0 interrupt！
+
+Thread-1 interrupt！
+
+Thread-2 interrupt！
+
+Thread-0 interrupt！
+
+Thread-1 interrupt！
+
+Thread-2 interrupt！
+
+Thread Thread-1 still working!
+
+Thread Thread-0 still working!
+* */
