@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MyThreadPool {
     private final ReentrantLock lock = new ReentrantLock();// ReentrantLock锁
-    private volatile BlockingQueueWithLock<Runnable> queue = null;// 任务阻塞队列
+    private volatile ArrayBlockingQueue<Runnable> queue = new BlockingQueueWithLock<Runnable>(10);// 任务阻塞队列
     private volatile ArrayList<Thread> threads = new ArrayList<>();// 可以动态修改的数组存储线程
     private volatile HashSet<MyThreadPool.Running> runningSet = new HashSet<>();// 不重复的运行集
 
@@ -52,7 +52,7 @@ public class MyThreadPool {
         this.poolSize = num;
 
         try {
-            queue = (BlockingQueueWithLock<Runnable>) (new ArrayBlockingQueue<Runnable>(poolSize)); // 不强转会报不兼容 但已经继承了ArrayBlockingQueue了(?)
+            queue = new ArrayBlockingQueue<Runnable>(poolSize);
         }catch (ClassCastException e) {
             e.printStackTrace();
         }
@@ -110,3 +110,12 @@ public class MyThreadPool {
         ex.shutdown();
     }
 }
+
+/**
+ * IllegalArgumentException 方法收到非法参数
+ * Exception in thread "main" java.lang.IllegalArgumentException
+ * 	at java.base/java.util.concurrent.ArrayBlockingQueue.<init>(ArrayBlockingQueue.java:272)
+ * 	at java.base/java.util.concurrent.ArrayBlockingQueue.<init>(ArrayBlockingQueue.java:257)
+ * 	at MyThreadPool.<init>(MyThreadPool.java:55)
+ * 	at MyThreadPool.main(MyThreadPool.java:105)
+ * */
