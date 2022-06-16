@@ -6,17 +6,34 @@ import java.util.concurrent.locks.ReentrantLock;
 //final --> 不能被修改
 
 public class MyThreadPool {
-    private final ReentrantLock lock = new ReentrantLock();// ReentrantLock锁
+    private volatile ReentrantLock lock = new ReentrantLock();// ReentrantLock锁
     private volatile ArrayBlockingQueue<Runnable> queue = new BlockingQueueWithLock<Runnable>(10);// 任务阻塞队列
     private volatile ArrayList<Thread> threads = new ArrayList<>();// 可以动态修改的数组存储线程
     private volatile HashSet<MyThreadPool.Running> runningSet = new HashSet<>();// 不重复的运行集
 
     private volatile int poolSize;  // 当前运行线程数
-    private final int coreSize;  // 核心线程数(min/基本)
-    private final int maxSize;  // 最大线程数(max)
-    private final int timeOut;
+    private volatile int coreSize;  // 核心线程数(min/基本)
+    private volatile int maxSize;  // 最大线程数(max)
+    //private final int timeOut;
     private volatile boolean RUNNING = true;// 是否正在运行
     private volatile boolean SHUTDOWN = false;// 是否停止工作
+
+    // MyThreadPool(int corePoolSize, int maxPoolSize, int timeout)
+    public MyThreadPool(int corePoolSize, int maxPoolSize) throws IllegalArgumentException{
+        ExecutorService ex = Executors.newFixedThreadPool(10);
+        int num = ((ThreadPoolExecutor)ex).getActiveCount();  // 获取当前运行线程数
+
+        this.coreSize = corePoolSize;
+        this.maxSize = maxPoolSize;
+        //this.timeOut = timeout;
+        this.poolSize = num;
+
+        try {
+            queue = new ArrayBlockingQueue<Runnable>(poolSize);  // ？
+        }catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+    }
 
     //class Running
     public final class Running implements Runnable {
@@ -38,23 +55,6 @@ public class MyThreadPool {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-    // MyThreadPool(int corePoolSize, int maxPoolSize, int timeout)
-    public MyThreadPool(int corePoolSize, int maxPoolSize, int timeout) throws IllegalArgumentException{
-        ExecutorService ex = Executors.newFixedThreadPool(10);
-        int num = ((ThreadPoolExecutor)ex).getActiveCount();  // 获取当前运行线程数
-
-        this.coreSize = corePoolSize;
-        this.maxSize = maxPoolSize;
-        this.timeOut = timeout;
-        this.poolSize = num;
-
-        try {
-            queue = new ArrayBlockingQueue<Runnable>(poolSize);
-        }catch (ClassCastException e) {
-            e.printStackTrace();
         }
     }
 
@@ -102,7 +102,7 @@ public class MyThreadPool {
 
     // Main Test
     public static void main(String[] args) throws IllegalArgumentException {
-        MyThreadPool ex = new MyThreadPool(2, 5, 0);
+        MyThreadPool ex = new MyThreadPool(2, 5);  // ？
         for (int i = 2; i < 5; i++) {
             ex.execute(() ->
                     System.out.println("Thread" + Thread.currentThread().getName() + "still working!\n"));
