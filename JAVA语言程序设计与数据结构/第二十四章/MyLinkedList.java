@@ -1,4 +1,4 @@
-public class MyLinkedList implements MyList<E>{
+public class MyLinkedList<E> implements MyList<E>{
     private Node<E> head,tail;
     private int size = 0;
 
