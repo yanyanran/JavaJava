@@ -2,7 +2,7 @@ public class MyLinkedList<E> implements MyList<E>{
     private Node<E> head,tail;
     private int size = 0;
 
-    private static class Node<E>{
+    private static class Node<E>{  // Node结点类
         E element;
         Node<E> next;
 
@@ -36,23 +36,24 @@ public class MyLinkedList<E> implements MyList<E>{
         }
     }
 
+    /* 头插法 */
     public void addFirst(E e){
-        Node<E> newNode = new Node<E>(e);
+        Node<E> newNode = new Node<>(e);  // 建立一个新结点
+        newNode.next = head;  // 将新节点与头链接
+        head = newNode;  // 头指向新节点
+        size++; // 长度增加
 
         if(tail == null){
-            head = tail = newNode;
-        }else{
-            tail.next = newNode;
-            tail = newNode;
+            tail = head;
         }
-        size++;
-  }
+    }
 
+    /* 尾插法 */
     public void addLast(E e){
         Node<E> newNode = new Node<>(e);
 
-        if(tail == null){
-            head = tail = newNode;
+        if(tail == null){  // 多一层判断
+            head = tail = newNode; //统一指向
         }else{
             tail.next = newNode;
             tail = newNode;
@@ -60,20 +61,22 @@ public class MyLinkedList<E> implements MyList<E>{
         size++;
     }
 
+    /* 指定插入 */
     @Override
     public void add(int index, E e){
         if(index == 0){
             addFirst(e);
         }else if(index >= size){
             addLast(e);
-        }else{
+        }else{  // 在中间插入：
             Node<E> current = head;
-            for(int i = 1; i < index;i++){
-                current = current.next;
+            for(int i = 1; i < index; i++){
+                // 定位
+                current = current.next;   // next需要一个个接过去
             }
             Node<E> temp = current.next;
-            current.next = new Node<>(e);
-            (current.next).next = temp;
+            current.next = new Node<>(e); // 前结点
+            (current.next).next = temp;  // 后结点
             size++;
         }
     }
@@ -84,7 +87,7 @@ public class MyLinkedList<E> implements MyList<E>{
             return null;
         } else {
             temp = head;
-            head = head.next;
+            head = head.next;  // 将head指向第二个结点，从而删除第一个
             size--;
             if (head == null) {
                 tail = null;
@@ -101,10 +104,11 @@ public class MyLinkedList<E> implements MyList<E>{
             head = tail = null;
             size = 0;
             return temp.element;
-        }else{
+        }else{  // 销毁最后一个结点
             Node<E> current = head;
-            for(int i = 0;i <size - 2;i++){
-                current = current.next;
+            // tail重定位到倒二个结点上
+            for(int i = 0;i < size - 2; i++){
+                current = current.next;  // 定位操作
             }
             Node<E> temp = tail;
             tail = current;
