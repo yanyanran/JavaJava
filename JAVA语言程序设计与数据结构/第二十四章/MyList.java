@@ -1,11 +1,17 @@
 import java.util.Collection;
 //MyList接口
 public interface MyList<E> extends Collection<E> {
+    // 指定位置添加
     public void add(int index, E e);
+    // 返回索引处元素
     public E get(int index);
+    // 返回表中第一个匹配元素的索引
     public int indexOf(Object e);
+    // 返回表中最后一个匹配元素的索引
     public int lastIndexOf(E e);
+    //移除并返回
     public E remove(int index);
+    //替换
     public E set(int index, E e);
 
     @Override
