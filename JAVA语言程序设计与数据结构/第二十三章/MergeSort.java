@@ -18,9 +18,9 @@ public class MergeSort {
 
     // merge方法归并两个数组为temp
     public static void merge(int[] list1, int[] list2, int[] temp){
-        int current1 = 0;  // list1 元素
-        int current2 = 0;  // list2 元素
-        int current3 = 0;  // temp 元素
+        int current1 = 0;  // list1 元素下标
+        int current2 = 0;  // list2 元素下标
+        int current3 = 0;  // temp 元素下标
 
         while(current1 < list1.length && current2 < list2.length){
             if(list1[current1] < list2[current2]){
