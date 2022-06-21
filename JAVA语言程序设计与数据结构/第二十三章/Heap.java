@@ -24,7 +24,7 @@ public class Heap<E extends Comparable<E>>{
                     list.get(parentIndex)) > 0){  // 当前结点 > 父结点
                 // 交换current结点和parent结点
                 E temp = list.get(currentIndex);
-                list.set(currentIndex, list.get(parentIndex));  使用set()替换
+                list.set(currentIndex, list.get(parentIndex));  // 使用set()替换
                 list.set(parentIndex,temp);
             }else break;
             currentIndex = parentIndex;  // 让当前结点指向父结点
