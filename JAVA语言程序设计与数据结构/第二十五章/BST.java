@@ -11,27 +11,48 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         }
     }
 
+    // 查找
     @Override
     public boolean search(E e){
         TreeNode current = root;
 
-        while(current != null){
-            if(e.compareTo((E) current.element) < 0){
-                current = current.left;
-            }else if(e.compareTo((E) current.element) > 0){
-                current = current.right;
-            }else return true;
+        while(current != null){  //不为空时->
+            if(e.compareTo((E) current.element) < 0){  // 小于->
+                current = current.left;  //指到left->
+            }else if(e.compareTo((E) current.element) > 0){  // 大于->
+                current = current.right;  //指到right->
+            }else return true; // 相同即找到
         }
-        return false;
+        return false;  // 没找到
     }
 
+    /* 递归search
+    public boolean search(E e) {
+        return search(root, e);
+    }
+
+    public boolean search(TreeNode<E> root, E e) {
+        if (root == null)
+            return false;
+        else if (e.compareTo(root.element) < 0)
+            return search(root.left, e);
+        else if (e.compareTo(root.element) > 0)
+            return search(root.right, e);
+         else
+            return true;
+    }
+    * */
+
+    // 插入
     @Override
     public boolean insert(E e){
         if(root == null){
-            root = createNewNode(e);
+            root = createNewNode(e); //如果树为空，创建一个新的根结点
         }else {
+            // 否则寻找新元素父节点的位置
             TreeNode<E> parent = null;
             TreeNode<E> current = root;
+
             while(current != null){
                 if(e.compareTo(current.element) < 0){
                     parent = current;
@@ -41,7 +62,7 @@ class BST<E extends Comparable<E>> implements Tree<E>{
                     current = current.left;
                 }else return false;
             }
-
+            // 链接父结点
             if(e.compareTo(parent.element) < 0)
                 parent.left = createNewNode(e);
             else
@@ -55,25 +76,25 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         return new TreeNode<>(e);
     }
 
+    // 中序遍历
     @Override
     public void inorder(){
         inorder(root);
     }
-
     protected void inorder(TreeNode<E> root){
-        if(root == null){
+        if(root == null){  // 树为空时结束递归
             return;
         }
-        inorder(root.left);
-        System.out.print(root.element + " ");
-        inorder(root.right);
+        inorder(root.left);  //递归左结点
+        System.out.print(root.element + " ");  // 中间结点
+        inorder(root.right);  // 递归右结点
     }
 
+    // 后序遍历
     @Override
     public void postorder(){
         postorder(root);
     }
-
     protected void postorder(TreeNode<E> root){
         if(root == null){
             return;
@@ -83,10 +104,10 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         System.out.print(root.element + " ");
     }
 
+    // 前序遍历
     public void preorder(){
         preorder(root);
     }
-
     protected void preorder(TreeNode<E> root){
         if(root == null){
             return ;
@@ -96,6 +117,7 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         preorder(root.right);
     }
 
+    // 树结点class
     public static class TreeNode<E>{
         protected E element;
         protected TreeNode<E> left;
@@ -115,6 +137,7 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         return root;
     }
 
+    // 以数组线性表返回结点路径
     public java.util.ArrayList<TreeNode<E>> path(E e){
         java.util.ArrayList<TreeNode<E>> list = new java.util.ArrayList<>();
         TreeNode<E> current = root;
