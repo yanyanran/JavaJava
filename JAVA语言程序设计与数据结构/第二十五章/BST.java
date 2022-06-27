@@ -153,10 +153,13 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         return list;
     }
 
+    /**删除*/
     @Override
     public boolean delete(E e){
         TreeNode<E> parent = null;
         TreeNode<E> current = root;
+
+        // 定位current和parent
         while(current != null){
             if(e.compareTo(current.element) < 0){
                 parent = current;
@@ -168,29 +171,32 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         }
 
         if(current == null){
-            return false;
+            return false;  // 结点不在树中
         }
 
+        // 1、无左子结点
         if(current.left == null){
             if(parent == null){
-                root = current.right;
+                root = current.right;  // 没有父结点 就设为根结点
             }else {
-                if(e.compareTo(parent.element) < 0){
+                if(e.compareTo(parent.element) < 0){  // 删除current结点
                     parent.left = current.right;
                 }else {
                     parent.right = current.right;
                 }
             }
-        }else{
+        }else{  // 2、有左子结点
             TreeNode<E> parentOfRightMost = current;
             TreeNode<E> rightMost = current.left;
 
+            // 定位rightMost和parentOfRightMost
             while (rightMost.right != null){
                 parentOfRightMost = rightMost;
                 rightMost = rightMost.right;
             }
-            current.element = rightMost.element;
+            current.element = rightMost.element;  // 用rightMost替换current
 
+            // 删除rightMost结点
             if(parentOfRightMost.right == rightMost){
                 parentOfRightMost.right = rightMost.left;
             }else{
