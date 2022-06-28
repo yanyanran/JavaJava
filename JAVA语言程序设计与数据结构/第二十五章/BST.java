@@ -207,11 +207,11 @@ class BST<E extends Comparable<E>> implements Tree<E>{
         return true;
     }
 
+    // 遍历迭代器
     @Override
     public java.util.Iterator<E> iterator() {
         return new InorderIterator();
     }
-
     private class InorderIterator implements java.util.Iterator<E>{
         private java.util.ArrayList<E> list = new java.util.ArrayList<>();
         private int current = 0;
