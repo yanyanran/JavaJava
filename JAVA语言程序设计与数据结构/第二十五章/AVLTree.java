@@ -1,14 +1,9 @@
-public class AVLTree<E extends Comparable<E>> extends BST{
+public class AVLTree<E extends Comparable<E>> extends BST<E>{
     public AVLTree() {
     }
 
     public AVLTree(E[] objects) {
         super(objects);
-    }
-
-    @Override
-    protected AVLTreeNode<E> createNewNode(E e){
-        return new AVLTreeNode<E>(e);
     }
 
     @Override
@@ -34,7 +29,7 @@ public class AVLTree<E extends Comparable<E>> extends BST{
     }
 
     private void balancePath(E e){
-        java.util.ArrayList<AVLTreeNode<E>> path = path(e);
+        java.util.ArrayList<TreeNode<E>> path = path(e);
         for(int i = path.size() - 1; i >= 0; i--){
             AVLTreeNode<E> A = (AVLTreeNode<E>)(path.get(i));
             updateHeight(A);
