@@ -6,18 +6,19 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         super(objects);
     }
 
+    // 插入方法和BST中的方法一样，只不过每次添加后需要检查平衡
     @Override
-    public boolean insert(E e){
+    public boolean insert(E e) {
         boolean success = super.insert(e);
         if(!success){
             return false;
         }else{
-            balancePath(e);
+            balancePath(e);  // 检查是否需要平衡操作
         }
         return true;
     }
 
-    private void updateHeight(AVLTreeNode<E> node){
+    private void updateHeight(AVLTreeNode<E> node) {
         if(node.left == null && node.right == null){
             node.height = 0;
         }else if(node.left == null){
@@ -28,9 +29,10 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
             node.height = 1 + Math.max(((AVLTreeNode<E>)(node.right)).height,((AVLTreeNode<E>)(node.left)).height);
     }
 
-    private void balancePath(E e){
-        java.util.ArrayList<TreeNode<E>> path = path(e);
-        for(int i = path.size() - 1; i >= 0; i--){
+    // 平衡一条路径上的结点
+    private void balancePath(E e) {
+        java.util.ArrayList<TreeNode<E>> path = path(e);  // 获取包含e的结点到根结点的路径
+        for(int i = path.size() - 1; i >= 0; i--) {
             AVLTreeNode<E> A = (AVLTreeNode<E>)(path.get(i));
             updateHeight(A);
             AVLTreeNode<E> parentOfA = (A == root) ? null : (AVLTreeNode<E>)(path.get(i - 1));
@@ -53,7 +55,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         }
     }
 
-    private int balanceFactor(AVLTreeNode<E> node){
+    private int balanceFactor(AVLTreeNode<E> node) {
         if(node.left == null){
             return -node.height;
         }else if(node.left == null){
@@ -62,7 +64,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
             return ((AVLTreeNode<E>)node.right).height - ((AVLTreeNode<E>)node.left).height;
     }
 
-    private void balanceLL(AVLTreeNode<E> A, TreeNode<E> parentOfA){
+    private void balanceLL(AVLTreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.left;
         if(A == root){
             root = B;
@@ -80,7 +82,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         updateHeight((AVLTreeNode<E>) B);
     }
 
-    private void balanceLR(TreeNode<E> A, TreeNode<E> parentOfA){
+    private void balanceLR(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.left;
         TreeNode C = B.right;
 
@@ -104,7 +106,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         updateHeight((AVLTreeNode<E>)C);
     }
 
-    private void balanceRR(TreeNode<E> A, TreeNode<E> parentOfA){
+    private void balanceRR(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B =A.right;
 
         if(A == root){
@@ -123,7 +125,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         updateHeight((AVLTreeNode<E>)B);
     }
 
-    private void balanceRL(TreeNode<E> A, TreeNode<E> parentOfA){
+    private void balanceRL(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.right;
         TreeNode<E> C = B.left;
 
@@ -147,7 +149,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
     }
 
     @Override
-    public boolean delete(E element){
+    public boolean delete(E element) {
         if (root == null) {
             return false;
         }
@@ -198,7 +200,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E>{
         return true;
     }
 
-    protected static class AVLTreeNode<E> extends BST.TreeNode<E>{
+    protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
         protected int height = 0;
 
         public AVLTreeNode(E e){
