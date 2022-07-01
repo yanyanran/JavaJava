@@ -45,7 +45,7 @@ public class RBTree<E extends Comparable<E>> extends BST<E> {
 
         if (x == null || x.isBlack()) {
             if(w.left == v && v.left == u){
-                restructureRecolor(u, v, w, w, parentOfw);
+                restructureRecolor(u, v , w, w, parentsOfw);
 
                 w.left = v.right;
                 v.right = w;
@@ -149,7 +149,97 @@ public class RBTree<E extends Comparable<E>> extends BST<E> {
     }
 
     private void fixDoubleBlack(RBTreeNode<E> grandparent, RBTreeNode<E> parent, RBTreeNode<E> db, ArrayList<TreeNode<E>> path, int i){
-        
+        RBTreeNode<E> y =(parent.right == db) ? (RBTreeNode<E>)(parent.left) : (RBTreeNode<E>) (parent.right);
+        RBTreeNode<E> y1 = (RBTreeNode<E>) (y.left);
+        RBTreeNode<E> y2 = (RBTreeNode<E>) (y.right);
+
+        if(y.isBlack() && y1 != null && y1.isRed()) {
+            if(parent.right == db) {
+                connectNewParent(grandparent, parent, y);
+                recolor(parent, y, y1);
+
+                parent.left = y.right;
+                y.right = parent;
+            }else {
+                connectNewParent(grandparent, parent, y1);
+                recolor(parent, y1, y);
+
+                parent.right = y1.left;
+                y.left = y1.right;
+                y1.left = parent;
+                y1.right = y;
+            }
+        }else if(y.isBlack() && y2 != null && y2.isRed()) {
+            if(parent.right == db){
+                connectNewParent(grandparent, parent, y2);
+                recolor(parent, y2, y);
+
+                y.right = y2.left;
+                parent.left = y2.right;
+                y2.left = y;
+                y2.right = parent;
+            }else {
+                connectNewParent(grandparent, parent, y);
+                recolor(parent, y, y2);
+
+                y.left = parent;
+                parent.right = y1;
+            }
+        }else if(y.isBlack()) {
+            y.setRed();
+            if(parent.isRed()){
+                parent.setBlack();
+            }else if(parent != root){
+                db = parent;
+                parent = grandparent;
+                grandparent = (i >= 3) ? (RBTreeNode<E>) (path.get(i - 3)) : null;
+                fixDoubleBlack(grandparent, parent, db, path, i - 1);
+            }
+        }else {
+            if(parent.right == db) {
+                parent.left = y2;
+                y.right = parent;
+            }else {
+                parent.right = y.left;
+                y.left = parent;
+            }
+            parent.setRed();
+            y.setBlack();
+            connectNewParent(grandparent, parent, y);
+            fixDoubleBlack(y, parent, db, path, i - 1);
+        }
+    }
+
+    private void recolor(RBTreeNode<E> parent, RBTreeNode<E> newParent, RBTreeNode<E> c) {
+        if(parent.isRed()){
+            newParent.setRed();
+        }else {
+            newParent.setBlack();
+        }
+        parent.setBlack();
+        c.setBlack();
+    }
+
+    private void connectNewParent(RBTreeNode<E> grandparent, RBTreeNode<E> parent, RBTreeNode<E> newParent) {
+        if(parent == root){
+            root = newParent;
+            if(root != null) {
+                newParent.setBlack();
+            }
+        }else if(grandparent.left == parent){
+            grandparent.left = newParent;
+        }else
+            grandparent.right = newParent;
+    }
+
+    @Override
+    protected void preorder(TreeNode<E> root) {
+        if(root == null){
+            return;
+        }
+        System.out.println(root.element + (((RBTreeNode<E>)root).isRed() ? "(red)" :"black"));
+        preorder(root.left);
+        preorder(root.right);
     }
 
     protected static class RBTreeNode<E extends Comparable<E>> extends BST.TreeNode<E>{
