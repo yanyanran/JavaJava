@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JAVA语言程序设计与数据结构/JAVA语言程序设计与数据结构.iml" filepath="$PROJECT_DIR$/JAVA语言程序设计与数据结构/JAVA语言程序设计与数据结构.iml" />
       <module fileurl="file://$PROJECT_DIR$/JavaJava.iml" filepath="$PROJECT_DIR$/JavaJava.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Java网络编程/Java网络编程.iml" filepath="$PROJECT_DIR$/Java网络编程/Java网络编程.iml" />
     </modules>
   </component>
 </project>
