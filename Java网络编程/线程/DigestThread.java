@@ -28,7 +28,7 @@ public class DigestThread extends Thread{
             StringBuilder result = new StringBuilder(filename);
             result.append(": ");
             // DatatypeConverter.printHexBinary(byte[] val) 将字节数组转换为字符串
-            result.append(DatatypeConverter.printHexBinary(digest));
+            // result.append(DatatypeConverter.printHexBinary(digest));
             System.out.println(result);
         }catch(NoSuchAlgorithmException e){
             System.err.println(e);
