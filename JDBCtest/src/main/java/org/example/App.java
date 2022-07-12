@@ -12,7 +12,7 @@ public class App {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            Class.forName(driver);
+            Class.forName("com.mysql.jdbc.Driver" + driver);
             conn = DriverManager.getConnection(url, userName, password);
             stmt = conn.createStatement();
             String sql = "select * from EMPLOYEES";
