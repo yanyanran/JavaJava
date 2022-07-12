@@ -4,7 +4,7 @@ import java.sql.*;
 public class App {
     public static void main(String[] args) {
         System.out.println("MySQL JDBC Example.");
-        Connection conn = null;
+        Connection conn ;
         String url = "jdbc:mysql://127.0.0.1:3306/ionic";
         String driver = "com.mysql.jdbc.Driver";
         String userName = "root";
@@ -12,7 +12,8 @@ public class App {
         Statement stmt = null;
         ResultSet rs = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver" + driver);
+            Class.forName("com.mysql.jdbc.Driver" + driver);  // 抛出java.lang.ClassNotFoundException异常
+            // 解决方法：forName中加上包名
             conn = DriverManager.getConnection(url, userName, password);
             stmt = conn.createStatement();
             String sql = "select * from EMPLOYEES";
@@ -32,13 +33,13 @@ public class App {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException sqlEx) { } // ignore
+                } catch (SQLException ignored) { } // ignore
             }
 
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException sqlEx) { } // ignore
+                } catch (SQLException ignored) { } // ignore
             }
         }
     }
