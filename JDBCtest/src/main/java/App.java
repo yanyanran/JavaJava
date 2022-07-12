@@ -4,8 +4,9 @@ public class App {
     public static void main(String[] args) {
         System.out.println("MySQL JDBC Example.");
         Connection conn ;
-        String url = "jdbc:mysql://127.0.0.1:3306/testmysql"; // jdbc:mysql://localhost:3306/数据库名称
-        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/testmysql?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+        // jdbc:mysql://localhost:3306/数据库名称
+        String driver = "com.mysql.cj.jdbc.Driver";
         String userName = "root";
         String password = "yan021008";
         Statement stmt = null;
