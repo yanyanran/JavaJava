@@ -1,8 +1,11 @@
+package netty;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.util.CharsetUtil;
+
 public class NettyServerHandle implements ChannelInboundHandler {
     /**
      * 通道读取事件

@@ -1,3 +1,4 @@
+package netty;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -6,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 /**
  * Netty服务端
  */
@@ -24,16 +26,14 @@ public class NettyServer {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)      //5.设置服务端通道实现;
                 .option(ChannelOption.SO_BACKLOG, 128)      //6.参数设置-设置线程队列中等待连接个数
-                .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);     //7.参数设置-设置活跃状态,child是设置
-
-        bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {  // workerGroup.childHandler (error
-            //8.创建一个通道初始化对象
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                //9.向pipeline中添加自定义业务处理handler
-                ch.pipeline().addLast(new NettyServerHandle());
-            }
-        });
+                .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)     //7.参数设置-设置活跃状态,child是设置workerGroup
+                .childHandler(new ChannelInitializer<SocketChannel>() {   //8.创建一个通道初始化对象
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        //9.向pipeline中添加自定义业务处理handler
+                        ch.pipeline().addLast(new NettyServerHandle());
+                    }
+                });
 
         //10.启动服务端并绑定端口,同时将异步改为同步
         ChannelFuture future = bootstrap.bind(9999).sync();
