@@ -14,7 +14,7 @@ import io.netty.handler.codec.string.StringEncoder;
 public class NettyChatServer {
     private int port;   //端口号
 
-    public NettyChatServer() {
+    public NettyChatServer(int port) {
         this.port = port;
     }
 
@@ -65,6 +65,6 @@ public class NettyChatServer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new NettyChatServer().run();
+        new NettyChatServer(9998).run();
     }
 }
