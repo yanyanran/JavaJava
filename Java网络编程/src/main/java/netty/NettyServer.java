@@ -27,6 +27,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<SocketChannel>() {   //8.创建一个通道初始化对象
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+                        // add message decoder
+                        ch.pipeline().addLast(new MessageDecoder());
+                        // add message encoder
+                        ch.pipeline().addLast(new MessageEncoder());
                         //9.向pipeline中添加自定义业务处理handler
                         ch.pipeline().addLast(new NettyServerHandle());
                     }
