@@ -2,6 +2,7 @@ package netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,8 +26,22 @@ public class NettyClient {
                         //6. 向pipeline中添加自定义业务处理handler
                         ch.pipeline().addLast(new NettyClientHandle());
                     }});
+
         //7. 启动客户端, 等待连接服务端, 同时将异步改为同步
         ChannelFuture future = bootstrap.connect("127.0.0.1", 9999).sync();
+        /**
+         * Future - Listener
+         * */
+        future.addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                if (future.isSuccess()) {
+                    System.out.println("数据发送成功.");
+                } else {
+                    System.out.println("数据发送失败.");
+                }
+            }
+        });
 
         //8. 关闭通道和关闭连接池
         future.channel().closeFuture().sync();
