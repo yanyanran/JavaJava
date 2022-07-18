@@ -4,9 +4,16 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import org.springframework.stereotype.Component;
+
+import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 /*** 自定义处理类
  * TextWebSocketFrame: websocket数据是帧的形式处理
@@ -49,19 +56,35 @@ public class WebSocketHandler extends
      * @param textWebSocketFrame
      * @throws Exception
      */
+    // 用来保存所有的客户端连接
+    private static final ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+
+    // 当Channel中有新的事件消息会自动调用
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx,
-                                TextWebSocketFrame textWebSocketFrame) throws Exception {
-        String msg = textWebSocketFrame.text();
-        System.out.println("msg:" + msg);
-//当前发送消息的通道, 当前发送的客户端连接
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
+        // 获取客户端发送过来的文本消息
+        String text = msg.text();
+        System.out.println("接收到消息数据为：" + text);
         Channel channel = ctx.channel();
-        for (Channel channel1 : channelList) {
-//排除自身通道
-            if (channel != channel1) {
-                channel1.writeAndFlush(new TextWebSocketFrame(msg));
-            }}
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) channel.remoteAddress();
+        String hostName = inetSocketAddress.getHostName();
+        Integer port = inetSocketAddress.getPort();
+        String username = String.format("%s:%s", hostName, port);
+        String chatContent = String.format("[%s] [%s] [%s]", sdf.format(new Date()), username, text);
+        for (Channel client : clients) {
+            // 将消息发送到所有的客户端
+            client.writeAndFlush(new TextWebSocketFrame(chatContent));
+        }
     }
+
+    // 当有新的客户端连接服务器之后，会自动调用这个方法
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        // 将新的通道加入到clients
+        clients.add(ctx.channel());
+    }
+
     /**
      * 异常处理事件
      *

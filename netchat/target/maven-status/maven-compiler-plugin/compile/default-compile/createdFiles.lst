@@ -1,6 +1,6 @@
 nettynetchat/WebSocketChannelInit.class
 META-INF/spring-configuration-metadata.json
-nettynetchat/NettyConfig.class
 nettynetchat/NettyWebSocketServer.class
+nettynetchat/NettyConfig.class
 nettynetchat/NettySpringbootApplication.class
 nettynetchat/WebSocketHandler.class
