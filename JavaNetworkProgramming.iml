@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="web" name="Web">
+      <configuration>
+        <webroots />
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/Java网络编程/src/main/java" />
+          <root url="file://$MODULE_DIR$/Java网络编程/src/main/resources" />
+        </sourceRoots>
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
+  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
     <output url="file://$MODULE_DIR$/Java网络编程/target/classes" />
     <output-test url="file://$MODULE_DIR$/Java网络编程/target/test-classes" />
@@ -11,6 +25,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="Tomcat " level="application_server_libraries" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.42.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.79.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.79.Final" level="project" />

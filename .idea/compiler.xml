@@ -2,15 +2,19 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="JDBCtest" />
+        <module name="JavaNetworkProgramming" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JavaJava" target="17" />
+      <module name="JavaNetworkProgramming" target="17" />
       <module name="JDBCtest" target="1.7" />
+      <module name="TTT" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

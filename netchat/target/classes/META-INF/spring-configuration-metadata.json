@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "netty",
+      "type": "nettynetchat.NettyConfig",
+      "sourceType": "nettynetchat.NettyConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "netty.path",
+      "type": "java.lang.String",
+      "sourceType": "nettynetchat.NettyConfig"
+    },
+    {
+      "name": "netty.port",
+      "type": "java.lang.Integer",
+      "sourceType": "nettynetchat.NettyConfig",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}
