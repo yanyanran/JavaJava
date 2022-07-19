@@ -1,9 +1,6 @@
 package client.login;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Client {
@@ -21,7 +18,7 @@ public class Client {
         con = DriverManager.getConnection(url,user,pass);
 
         System.out.println("********用户界面********");
-        System.out.println("请选择：\n 1:用户登录\n 2：用户注册");
+        System.out.println("请选择：\n 1:用户登录\n 2：用户注册\n 3：注销用户");
         System.out.println("**********************");
 
         int i = input.nextInt();
@@ -32,6 +29,8 @@ public class Client {
             case 2:
                 register();
                 break;
+            case 3:
+                logout();
             default:
                 System.out.println("!!!Error input!!!");
                 System.exit(0);
@@ -93,5 +92,29 @@ public class Client {
             System.out.println("-------Incorrect name or password!---------\n" + "please login again:");
             login();
         }
+    }
+
+
+    //?????
+    public static void logout() throws Exception {
+        System.out.println("Please enter the name you want to log out: ");
+        username = input.next();
+        System.out.println("Please enter the password: ");
+        password = input.next();
+
+        Statement stmt = con.createStatement();
+        String query = "ALTER TABLE username Drop password";
+            System.out.println("Are you sure you want to cancel this account？\n yes enter 1 and no enter 2");
+            int result = stmt.executeUpdate(query);
+        if(result > 0){
+            int i = input.nextInt();
+            switch (i) {
+                case 1:
+                    System.out.println("-------删除完成--------");
+                    break;
+                case 2:
+                    break;
+        }
+
     }
 }
