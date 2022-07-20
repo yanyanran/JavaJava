@@ -17,28 +17,11 @@ public class Client {
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url,user,pass);
 
-        System.out.println("********用户界面********");
-        System.out.println("请选择：\n 1:用户登录\n 2：用户注册\n 3：注销用户");
-        System.out.println("**********************");
-
-        int i = input.nextInt();
-        switch (i) {
-            case 1:
-                login();
-                break;
-            case 2:
-                register();
-                break;
-            case 3:
-                logout();
-            default:
-                System.out.println("!!!Error input!!!");
-                System.exit(0);
-        }
+        homePage();
     }
 
-    public static void register() throws Exception{
-        System.out.println("Please inout your name: ");
+    public static void register() throws Exception {
+        System.out.println("Please input your name: ");
         username = input.next();
         System.out.println("Please input your password: ");
         String p1 = input.next();
@@ -94,8 +77,7 @@ public class Client {
         }
     }
 
-
-    //?????
+    // 删除
     public static void logout() throws Exception {
         System.out.println("Please enter the name you want to log out: ");
         username = input.next();
@@ -103,18 +85,51 @@ public class Client {
         password = input.next();
 
         Statement stmt = con.createStatement();
-        String query = "ALTER TABLE username Drop password";
-            System.out.println("Are you sure you want to cancel this account？\n yes enter 1 and no enter 2");
-            int result = stmt.executeUpdate(query);
-        if(result > 0){
-            int i = input.nextInt();
-            switch (i) {
-                case 1:
-                    System.out.println("-------删除完成--------");
-                    break;
-                case 2:
-                    break;
+        String sql = "delete from client where username=? and password=?";
+        System.out.println("Are you sure you want to cancel this account？\n yes enter 1 and no enter 2");
+        int i = input.nextInt();
+        switch (i) {
+            case 1:
+                //int result = stmt.executeUpdate(sql);
+                //if(result > 0) {
+                    //System.out.println("-------Account has been cancelled--------");
+                //}
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setString(1,username);
+                ps.setString(2,password);
+                ps.executeUpdate();
+                System.out.println("-------Account has been cancelled--------");
+                break;
+            case 2:
+                System.out.println("-------You choose to keep your account--------");
+                break;
+            default:
+                System.out.println("!!!Error input!!!");
+                System.exit(0);
         }
+    }
 
+    // 主页面
+    public static void homePage() throws Exception {
+        System.out.println("********用户界面********");
+        System.out.println("请选择：\n 1:用户登录\n 2：用户注册\n 3：注销用户");
+        System.out.println("**********************");
+
+        int i = input.nextInt();
+        switch (i) {
+            case 1:
+                login();
+                break;
+            case 2:
+                register();
+                break;
+            case 3:
+                logout();
+                homePage();
+                break;
+            default:
+                System.out.println("!!!Error input!!!");
+                System.exit(0);
+        }
     }
 }
