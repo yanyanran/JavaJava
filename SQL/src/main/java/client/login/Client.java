@@ -1,6 +1,7 @@
 package client.login;
 
 import java.sql.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Client {
@@ -12,39 +13,63 @@ public class Client {
     private static Connection con;
     static Scanner input = new Scanner(System.in);
 
+    // main
     public static void main(String[] args) throws Exception{
         // loading....
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url,user,pass);
-
         homePage();
     }
 
+    // 注册
     public static void register() throws Exception {
-        System.out.println("Please input your name: ");
+        System.out.println("请输入您的用户名： ");
         username = input.next();
-        System.out.println("Please input your password: ");
-        String p1 = input.next();
-        System.out.println("Please input your password again to confirm the password: ");
-        String p2 = input.next();
 
-        if((p1).equals(p2)) {
-            // YES
-            password = p1;
-            String sql = "insert into client (username,password) values(?,?)";
-            PreparedStatement ptmt = con.prepareStatement(sql);
-            ptmt.setString(1, username);
-            ptmt.setString(2, password);
-            ptmt.execute();
-            System.out.println("------Registration is successful, please log in-------");
-            login();
+        // 这里需要判断此用户名在数据库中是否有重合项
+        // 查询
+        int flag = 0;
+        String name = username;
+        Statement statement = con.createStatement();
+        String ssql = "select username from client";
+        ResultSet resultSet = statement.executeQuery(ssql);
+        // 遍历
+        while(resultSet.next()) {
+            String sqlname = resultSet.getString("username");
+            // 有重复,将flag设为1
+            if(sqlname.equals(name) == true) {
+                flag = 1;
+            }
         }
+
+        // 1、没有重复项，可注册
+        if(flag == 0){
+            System.out.println("请输入您的密码： ");
+            String p1 = input.next();
+            System.out.println("请再次输入您的密码以确认密码：");
+            String p2 = input.next();
+            // 两次密码输入一样 ，成功注册写入数据库
+            if((p1).equals(p2)) {
+                password = p1;
+                String sql = "insert into client (username,password) values(?,?)";
+                PreparedStatement ptmt = con.prepareStatement(sql);
+                ptmt.setString(1, username);
+                ptmt.setString(2, password);
+                ptmt.execute();
+                System.out.println("------注册成功，请登录-------");
+                login();
+            }
+        }else{  // 2、用户名已存在，重来
+                System.out.println("错误：用户名已存在");
+                register();
+            }
     }
 
+    // 登陆
     public static void login() throws Exception {
-        System.out.println("Please input your name: ");
+        System.out.println("请输入您的姓名： ");
         username = input.next();
-        System.out.println("Please input your password: ");
+        System.out.println("请输入您的密码： ");
         password = input.next();
 
         String sql = "select id,username,password from client where username=? and password=?";
@@ -54,7 +79,7 @@ public class Client {
         ResultSet rs = ptmt.executeQuery();
 
         if(rs.next()){
-            System.out.println("-------Account login successful--------");
+            System.out.println("-------账号登录成功--------");
 
             String sql2 = "select id,username,password from client";
             // 展开数据库结果集
@@ -72,21 +97,21 @@ public class Client {
                 System.out.print("\n");
             }
         }else{
-            System.out.println("-------Incorrect name or password!---------\n" + "please login again:");
+            System.out.println("-------名称或密码错误！---------\n" + "请重新登录:");
             login();
         }
     }
 
-    // 删除
+    // 注销
     public static void logout() throws Exception {
-        System.out.println("Please enter the name you want to log out: ");
+        System.out.println("请输入您要注销的账号名称：");
         username = input.next();
-        System.out.println("Please enter the password: ");
+        System.out.println("请输入密码： ");
         password = input.next();
 
         Statement stmt = con.createStatement();
         String sql = "delete from client where username=? and password=?";
-        System.out.println("Are you sure you want to cancel this account？\n yes enter 1 and no enter 2");
+        System.out.println("您确定要注销此帐户吗？\n 确定注销：输入1 ---- 不注销了：输入2");
         int i = input.nextInt();
         switch (i) {
             case 1:
@@ -98,13 +123,13 @@ public class Client {
                 ps.setString(1,username);
                 ps.setString(2,password);
                 ps.executeUpdate();
-                System.out.println("-------Account has been cancelled--------");
+                System.out.println("-------帐户已被注销--------");
                 break;
             case 2:
-                System.out.println("-------You choose to keep your account--------");
+                System.out.println("-------您选择保留您的帐户--------");
                 break;
             default:
-                System.out.println("!!!Error input!!!");
+                System.out.println("!!!错误输入!!!");
                 System.exit(0);
         }
     }
@@ -128,7 +153,7 @@ public class Client {
                 homePage();
                 break;
             default:
-                System.out.println("!!!Error input!!!");
+                System.out.println("!!!错误输入!!!");
                 System.exit(0);
         }
     }
